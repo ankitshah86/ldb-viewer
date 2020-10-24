@@ -1,7 +1,11 @@
+// +build dev
 package main
 
 import (
+	"flag"
 	"fmt"
+	"net/http"
+	"strconv"
 
 	"github.com/syndtr/goleveldb/leveldb"
 )
@@ -10,8 +14,15 @@ var db *leveldb.DB
 var err error
 
 func main() {
-	fmt.Println("Hello World")
-	db, err = leveldb.OpenFile("testdb", nil)
+
+	http.HandleFunc("/", serveIndex)
+
+	dbArg := flag.String("dbpath", "testdb", "Absolute Path to the database")
+	flag.Parse()
+
+	fmt.Println(*dbArg)
+
+	db, err = leveldb.OpenFile(*dbArg, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -23,16 +34,56 @@ func main() {
 	}
 
 	for i := 0; i < 1000; i++ {
+		_, e := ReadValue(GetByteArray(i))
+
+		if e != nil {
+			fmt.Println("Error ", e)
+		} else {
+			//fmt.Println(i, string(v))
+		}
+	}
+
+	defer db.Close()
+	http.ListenAndServe(":8080", nil)
+}
+
+func serveIndex(res http.ResponseWriter, req *http.Request) {
+
+	s := `<style> h1 {text-align:center;color:green;}
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	  }
+	  
+	  td, th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+	  }
+	  
+	  tr:nth-child(even) {
+		background-color: #99ff99;
+	  }</style> <h1>Hello World</h1>
+
+	  <body>
+	  `
+
+	//add a table with all the values
+	s += "<table><tr><th>Key</th><th>Value</th></tr>"
+	for i := 0; i < 1000; i++ {
 		v, e := ReadValue(GetByteArray(i))
 
 		if e != nil {
 			fmt.Println("Error ", e)
 		} else {
-			fmt.Println(i, string(v))
+			//fmt.Println(i, string(v))
+			s = s + "<tr><td>" + strconv.Itoa(i) + "</td><td>" + string(v) + "</td></tr>"
 		}
 	}
+	s += "</table>"
+	res.Write([]byte(s))
 
-	defer db.Close()
 }
 
 //Insert is used to put key value pairs in database
