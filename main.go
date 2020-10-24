@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net/http"
@@ -15,7 +16,8 @@ var err error
 
 func main() {
 
-	http.HandleFunc("/", serveIndex)
+	http.Handle("/", http.FileServer(http.Dir("./public")))
+	http.HandleFunc("/data", handleReq)
 
 	dbArg := flag.String("dbpath", "testdb", "Absolute Path to the database")
 	flag.Parse()
@@ -45,6 +47,37 @@ func main() {
 
 	defer db.Close()
 	http.ListenAndServe(":8080", nil)
+}
+
+func handleReq(res http.ResponseWriter, req *http.Request) {
+
+	//res.Write([]byte("Hello world"))
+	req.ParseForm()
+	fmt.Println(req.PostForm)
+	k := []int{}
+	val := []string{}
+	for i := 0; i < 20; i++ {
+		v, e := ReadValue(GetByteArray(i))
+
+		if e != nil {
+			fmt.Println("Error ", e)
+		} else {
+			//fmt.Println(i, string(v))
+			k = append(k, i)
+			val = append(val, string(v))
+		}
+	}
+
+	type response struct {
+		Keys   []int    `json:"keys"`
+		Values []string `json:"values"`
+	}
+
+	s := response{Keys: k, Values: val}
+
+	s1, _ := json.Marshal(s)
+	res.Header().Set("Content-Type", "application/json")
+	fmt.Fprint(res, string(s1))
 }
 
 func serveIndex(res http.ResponseWriter, req *http.Request) {
