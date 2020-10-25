@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/syndtr/goleveldb/leveldb"
 )
@@ -53,9 +54,12 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	//res.Write([]byte("Hello world"))
 	req.ParseForm()
 	fmt.Println(req.PostForm)
+	params := req.PostForm
+
+	n, _ := strconv.Atoi(params["limit"][0])
 	k := []int{}
 	val := []string{}
-	for i := 0; i < 20; i++ {
+	for i := 0; i < n; i++ {
 		v, e := ReadValue(GetByteArray(i))
 
 		if e != nil {

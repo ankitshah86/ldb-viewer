@@ -1,10 +1,10 @@
-function getData(startpoint = null){
+function getData(startpoint = null, limit = 10){
     var xhr = new XMLHttpRequest()
     var url = 'http://localhost:8080/data'
 
     xhr.open("POST",url)
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-    xhr.send(`startPoint=${startpoint}`)
+    xhr.send(`startPoint=${startpoint}&limit=${limit}`)
 
     xhr.onload = (e) => {
         var res = JSON.parse(xhr.response)
@@ -17,9 +17,15 @@ function getData(startpoint = null){
         for(let i = 0; i < length;i++){
             txt += "<tr><td>" + res.keys[i] + "</td><td>" + res.values[i] + "</td></tr>"
         }
-
         txt += "</table>"
         t.innerHTML = txt
     }
 
+}
+
+
+function limitReset() {
+    var s = document.getElementById("limit")
+    var v = s.value
+    getData(null,v)
 }
