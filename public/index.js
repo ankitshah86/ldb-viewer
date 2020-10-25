@@ -1,5 +1,6 @@
 var res
 var limit
+var startPoint
 function getData(startpoint = null, limit = 10) {
     var xhr = new XMLHttpRequest()
     var url = 'http://localhost:8080/data'
@@ -30,10 +31,12 @@ function limitReset() {
     var s = document.getElementById("limit")
     var v = s.value
     limit = s.value
-    getData(null, v)
+    console.log(startPoint)
+    getData(startPoint, v)
 }
 
 function nextClicked() {
     var lastElement = res.keys[res.keys.length - 1]
+    startPoint = lastElement
     getData(lastElement, limit)
 }
