@@ -32,7 +32,7 @@ func main() {
 	Insert(GetByteArray("key"), GetByteArray("value"))
 
 	for i := 0; i < 1000; i++ {
-		Insert(GetByteArray(i), GetByteArray("heelo"))
+		Insert(GetByteArray(i), GetByteArray("hello from "+strconv.Itoa(i)))
 	}
 
 	for i := 0; i < 1000; i++ {
@@ -56,20 +56,64 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	fmt.Println(req.PostForm)
 	params := req.PostForm
 
-	n, _ := strconv.Atoi(params["limit"][0])
+	startPoint := params["startPoint"][0]
+
 	k := []int{}
 	val := []string{}
-	for i := 0; i < n; i++ {
-		v, e := ReadValue(GetByteArray(i))
 
-		if e != nil {
-			fmt.Println("Error ", e)
-		} else {
-			//fmt.Println(i, string(v))
-			k = append(k, i)
-			val = append(val, string(v))
+	iter := db.NewIterator(nil, nil)
+	limit, _ := strconv.Atoi(params["limit"][0])
+
+	i := 0
+	if startPoint == "null" {
+		for iter.Next() {
+			if i >= limit {
+				break
+			}
+			key := iter.Key()
+			value := iter.Value()
+
+			k = append(k, byteArrayToInt(key))
+			val = append(val, string(value))
+
+			i++
+		}
+	} else {
+		iter := db.NewIterator(nil, nil)
+		for ok := iter.Seek(GetByteArray(startPoint)); ok; ok = iter.Next() {
+			// Use key/value.
+			if i == 0 {
+				i++
+				//need to skip first one as it is the last value from previous page
+				continue
+			}
+
+			if i > limit {
+				break
+			}
+			key := iter.Key()
+			value := iter.Value()
+
+			k = append(k, byteArrayToInt(key))
+			val = append(val, string(value))
+			i++
+
 		}
 	}
+
+	/*
+		for i := 0; i < n; i++ {
+			v, e := ReadValue(GetByteArray(i))
+
+			if e != nil {
+				fmt.Println("Error ", e)
+			} else {
+				//fmt.Println(i, string(v))
+				k = append(k, i)
+				val = append(val, string(v))
+			}
+		}
+	*/
 
 	type response struct {
 		Keys   []int    `json:"keys"`
@@ -96,4 +140,10 @@ func ReadValue(key []byte) ([]byte, error) {
 //GetByteArray converts any type into byte array
 func GetByteArray(any interface{}) []byte {
 	return []byte(fmt.Sprintf("%v", any.(interface{})))
+}
+
+func byteArrayToInt(b []byte) int {
+	//add better handling here
+	r, _ := strconv.Atoi(string(b))
+	return r
 }
