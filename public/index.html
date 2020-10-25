@@ -15,6 +15,30 @@
       <option value="50">50</option>
       <option value="100">100</option>
     </select>
+    <p>
+      LevelDB stores data as Key-Value pairs. The Key and Value themselves are stored as an array of bytes. This array of bytes could be of any type. 
+      To ensure that data can be visualized in its correct format, you may choose the types of Key and Value. The defaule values are string for both.
+    </p>
+      <p>
+      <label>Key Type:</label>
+      <select id="keytype" onchange="keyTypeChanged()">
+        <option value="string">String</option>
+        <option value="integer">Integer</option>
+        <option value="hexadecimal">Hexadecimal</option>
+        <option value="boolean">Boolean</option>
+        <option value="bytearray">ByteArray</option>
+      </select>
+    </p>
+    <p>
+      <label>kalue Type:</label>
+      <select id="valuetype" onchange="valueTypeChanged()">
+        <option value="string">String</option>
+        <option value="integer">Integer</option>
+        <option value="hexadecimal">Hexadecimal</option>
+        <option value="boolean">Boolean</option>
+        <option value="bytearray">ByteArray</option>
+      </select>
+    </p>
     <div id="table">
     </div>
     <button onclick="previousClicked()">Previous</button><button onclick="nextClicked()">Next</button>

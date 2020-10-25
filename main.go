@@ -2,12 +2,14 @@
 package main
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/status-im/keycard-go/hexutils"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -58,9 +60,11 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 
 	startPoint := params["startPoint"][0]
 	directon := params["direction"][0]
+	keyType := params["keyType"][0]
+	valueType := params["valueType"][0]
 
-	k := []int{}
-	val := []string{}
+	var k []interface{}
+	var val []interface{}
 
 	iter := db.NewIterator(nil, nil)
 	limit, _ := strconv.Atoi(params["limit"][0])
@@ -74,8 +78,8 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 			key := iter.Key()
 			value := iter.Value()
 
-			k = append(k, byteArrayToInt(key))
-			val = append(val, string(value))
+			k = append(k, byteArrayToType(key, keyType))
+			val = append(val, byteArrayToType(value, valueType))
 
 			i++
 		}
@@ -97,9 +101,9 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 				}
 				key := iter.Key()
 				value := iter.Value()
+				k = append(k, byteArrayToType(key, keyType))
+				val = append(val, byteArrayToType(value, valueType))
 
-				k = append(k, byteArrayToInt(key))
-				val = append(val, string(value))
 				i++
 
 			}
@@ -125,8 +129,9 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 				key := iter.Key()
 				value := iter.Value()
 
-				k = append(k, byteArrayToInt(key))
-				val = append(val, string(value))
+				k = append(k, byteArrayToType(key, keyType))
+				val = append(val, byteArrayToType(value, valueType))
+
 				i++
 
 			}
@@ -135,8 +140,8 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	}
 
 	type response struct {
-		Keys   []int    `json:"keys"`
-		Values []string `json:"values"`
+		Keys   []interface{} `json:"keys"`
+		Values []interface{} `json:"values"`
 	}
 
 	s := response{Keys: k, Values: val}
@@ -164,5 +169,21 @@ func GetByteArray(any interface{}) []byte {
 func byteArrayToInt(b []byte) int {
 	//add better handling here
 	r, _ := strconv.Atoi(string(b))
+	return r
+}
+
+func byteArrayToType(b []byte, bType string) interface{} {
+	var r interface{}
+	if bType == "string" {
+		r = string(b)
+	} else if bType == "integer" {
+		r = binary.BigEndian.Uint32(b)
+	} else if bType == "hexadecimal" {
+		r = "0x" + hexutils.BytesToHex(b)
+	} else if bType == "boolean" {
+		r, _ = strconv.ParseBool(string(b))
+	} else if bType == "bytearray" {
+		return b
+	}
 	return r
 }
