@@ -57,6 +57,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	params := req.PostForm
 
 	startPoint := params["startPoint"][0]
+	directon := params["direction"][0]
 
 	k := []int{}
 	val := []string{}
@@ -79,41 +80,59 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 			i++
 		}
 	} else {
-		iter := db.NewIterator(nil, nil)
-		for ok := iter.Seek(GetByteArray(startPoint)); ok; ok = iter.Next() {
-			// Use key/value.
-			if i == 0 {
+
+		if directon == "previous" {
+
+			iter := db.NewIterator(nil, nil)
+			for ok := iter.Seek(GetByteArray(startPoint)); ok; ok = iter.Prev() {
+				// Use key/value.
+				if i == 0 {
+					i++
+					//need to skip first one as it is the last value from previous page
+					continue
+				}
+
+				if i > limit {
+					break
+				}
+				key := iter.Key()
+				value := iter.Value()
+
+				k = append(k, byteArrayToInt(key))
+				val = append(val, string(value))
 				i++
-				//need to skip first one as it is the last value from previous page
-				continue
+
+			}
+			//the array needs to be fliped
+			for i, j := 0, len(k)-1; i < j; i, j = i+1, j-1 {
+				k[i], k[j] = k[j], k[i]
+				val[i], val[j] = val[j], val[i]
 			}
 
-			if i > limit {
-				break
+		} else {
+			iter := db.NewIterator(nil, nil)
+			for ok := iter.Seek(GetByteArray(startPoint)); ok; ok = iter.Next() {
+				// Use key/value.
+				if i == 0 {
+					i++
+					//need to skip first one as it is the last value from previous page
+					continue
+				}
+
+				if i > limit {
+					break
+				}
+				key := iter.Key()
+				value := iter.Value()
+
+				k = append(k, byteArrayToInt(key))
+				val = append(val, string(value))
+				i++
+
 			}
-			key := iter.Key()
-			value := iter.Value()
-
-			k = append(k, byteArrayToInt(key))
-			val = append(val, string(value))
-			i++
-
 		}
+
 	}
-
-	/*
-		for i := 0; i < n; i++ {
-			v, e := ReadValue(GetByteArray(i))
-
-			if e != nil {
-				fmt.Println("Error ", e)
-			} else {
-				//fmt.Println(i, string(v))
-				k = append(k, i)
-				val = append(val, string(v))
-			}
-		}
-	*/
 
 	type response struct {
 		Keys   []int    `json:"keys"`

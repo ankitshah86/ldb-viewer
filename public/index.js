@@ -1,13 +1,13 @@
 var res
 var limit
 var startPoint
-function getData(startpoint = null, limit = 10) {
+function getData(startpoint = null, limit = 10, direction="next") {
     var xhr = new XMLHttpRequest()
     var url = 'http://localhost:8080/data'
 
     xhr.open("POST", url)
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-    xhr.send(`startPoint=${startpoint}&limit=${limit}`)
+    xhr.send(`startPoint=${startpoint}&limit=${limit}&direction=${direction}`)
 
     xhr.onload = (e) => {
         res = JSON.parse(xhr.response)
@@ -39,4 +39,10 @@ function nextClicked() {
     var lastElement = res.keys[res.keys.length - 1]
     startPoint = lastElement
     getData(lastElement, limit)
+}
+
+function previousClicked() {
+    var firstElement = res.keys[0]
+    startPoint = firstElement
+    getData(firstElement,limit,"previous")
 }
