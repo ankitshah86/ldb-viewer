@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/syndtr/goleveldb/leveldb"
 )
@@ -78,45 +77,6 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	s1, _ := json.Marshal(s)
 	res.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(res, string(s1))
-}
-
-func serveIndex(res http.ResponseWriter, req *http.Request) {
-
-	s := `<style> h1 {text-align:center;color:green;}
-	table {
-		font-family: arial, sans-serif;
-		border-collapse: collapse;
-		width: 100%;
-	  }
-	  
-	  td, th {
-		border: 1px solid #dddddd;
-		text-align: left;
-		padding: 8px;
-	  }
-	  
-	  tr:nth-child(even) {
-		background-color: #99ff99;
-	  }</style> <h1>Hello World</h1>
-
-	  <body>
-	  `
-
-	//add a table with all the values
-	s += "<table><tr><th>Key</th><th>Value</th></tr>"
-	for i := 0; i < 1000; i++ {
-		v, e := ReadValue(GetByteArray(i))
-
-		if e != nil {
-			fmt.Println("Error ", e)
-		} else {
-			//fmt.Println(i, string(v))
-			s = s + "<tr><td>" + strconv.Itoa(i) + "</td><td>" + string(v) + "</td></tr>"
-		}
-	}
-	s += "</table>"
-	res.Write([]byte(s))
-
 }
 
 //Insert is used to put key value pairs in database
