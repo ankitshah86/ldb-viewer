@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/syndtr/goleveldb/leveldb/iterator"
 )
 
 func serve() {
@@ -41,12 +43,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 			if i >= limit {
 				break
 			}
-			key := iter.Key()
-			value := iter.Value()
-
-			k = append(k, byteArrayToType(key, keyType))
-			val = append(val, byteArrayToType(value, valueType))
-
+			appendKeyValueToResp(&k, &val, iter, keyType, valueType)
 			i++
 		}
 	} else {
@@ -65,11 +62,8 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 				if i > limit {
 					break
 				}
-				key := iter.Key()
-				value := iter.Value()
-				k = append(k, byteArrayToType(key, keyType))
-				val = append(val, byteArrayToType(value, valueType))
 
+				appendKeyValueToResp(&k, &val, iter, keyType, valueType)
 				i++
 
 			}
@@ -92,12 +86,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 				if i > limit {
 					break
 				}
-				key := iter.Key()
-				value := iter.Value()
-
-				k = append(k, byteArrayToType(key, keyType))
-				val = append(val, byteArrayToType(value, valueType))
-
+				appendKeyValueToResp(&k, &val, iter, keyType, valueType)
 				i++
 
 			}
@@ -115,4 +104,12 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	s1, _ := json.Marshal(s)
 	res.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(res, string(s1))
+}
+
+func appendKeyValueToResp(keys *[]interface{}, values *[]interface{}, iter iterator.Iterator, keyType string, valueType string) {
+	key := iter.Key()
+	value := iter.Value()
+
+	*keys = append(*keys, byteArrayToType(key, keyType))
+	*values = append(*values, byteArrayToType(value, valueType))
 }
