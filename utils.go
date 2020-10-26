@@ -3,10 +3,33 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
+	"log"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/status-im/keycard-go/hexutils"
 )
+
+func createLogFile() {
+
+	if _, er := os.Stat("Request_logs"); os.IsNotExist(er) {
+		os.Mkdir("Request_logs", 0777)
+	}
+
+	f, err := os.Create("Request_logs/" + strconv.FormatInt(time.Now().Unix(), 10) + ".log")
+
+	if err != nil {
+		log.Fatalf("Error in creating log file %s\n", err)
+	}
+
+	logfile, err := os.OpenFile(f.Name(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	log.SetOutput(logfile)
+	log.Println("LDB-Viewer server started")
+	if err != nil {
+		log.Fatalf("Error in opening Log File %s\n", err)
+	}
+}
 
 //GetByteArray converts variable of any type into byte array
 func GetByteArray(any interface{}) []byte {

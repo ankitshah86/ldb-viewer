@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -11,26 +12,28 @@ func serve() {
 	http.Handle("/", http.FileServer(http.Dir("./public")))
 	http.HandleFunc("/data", handleReq)
 	fmt.Println("Serving on port 8080, To see the database, kindly go to http://localhost:8080 on the browser of your choice.")
+	createLogFile()
 	http.ListenAndServe(":8080", nil)
 }
 
 func handleReq(res http.ResponseWriter, req *http.Request) {
-
-	//res.Write([]byte("Hello world"))
 	req.ParseForm()
-	fmt.Println(req.PostForm)
+	//fmt.Println(req.PostForm)
 	params := req.PostForm
 
+	limit, _ := strconv.Atoi(params["limit"][0])
 	startPoint := params["startPoint"][0]
 	directon := params["direction"][0]
 	keyType := params["keyType"][0]
 	valueType := params["valueType"][0]
 
+	//log the incoming request
+	log.Println("New Request with folowing Params :", "limit =", limit, "| startPoint =", startPoint, "| direction =", directon, "| keyType =", keyType, "| valueType =", valueType)
+
 	var k []interface{}
 	var val []interface{}
 
 	iter := db.NewIterator(nil, nil)
-	limit, _ := strconv.Atoi(params["limit"][0])
 
 	i := 0
 	if startPoint == "null" {
