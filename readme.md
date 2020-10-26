@@ -26,3 +26,5 @@ For linux
 - [ ] Check database validity
 - [ ] Add Caching
 - [ ] Add support for csv export
+- [ ] Add support for lookup by key
+- [ ] Write a ddos detector
