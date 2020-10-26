@@ -24,3 +24,5 @@ For linux
 - [ ] Add Tests
 - [ ] Add support for integers
 - [ ] Check database validity
+- [ ] Add Caching
+- [ ] Add support for csv export
