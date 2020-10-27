@@ -52,7 +52,10 @@ func byteArrayToType(b []byte, bType string) interface{} {
 	} else if bType == "boolean" {
 		r, _ = strconv.ParseBool(string(b))
 	} else if bType == "bytearray" {
-		return b
+		rb := make([]byte, len(b))
+		//This needs to be done to ensure that actual values are appended as opposed to pointers
+		copy(rb, b)
+		return rb
 	}
 	return r
 }
