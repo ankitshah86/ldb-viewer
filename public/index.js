@@ -2,7 +2,7 @@ var res
 var limit
 var startPoint
 var direction = "next"
-var keyType = "string"
+var keyType = "integer"
 var valueType = "string"
 function getData(startpoint = null, limit = 10, direction = "next") {
     var xhr = new XMLHttpRequest()

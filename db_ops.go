@@ -35,9 +35,10 @@ func ReadValue(key []byte) ([]byte, error) {
 
 func initTestDB() {
 
-	Insert(GetByteArray("key"), GetByteArray("value"))
+	//Insert(GetByteArray("key"), GetByteArray("value"))
 
 	for i := 0; i < 1000; i++ {
-		Insert(GetByteArray(i), GetByteArray("hello from "+strconv.Itoa(i)))
+		//Insert(GetByteArray(i), GetByteArray("hello from "+strconv.Itoa(i)))
+		Insert(intToByteArray(i), GetByteArray("hello from "+strconv.Itoa(i), "string"))
 	}
 }

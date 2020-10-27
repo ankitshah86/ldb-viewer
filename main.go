@@ -3,6 +3,7 @@ package main
 
 import (
 	"flag"
+	"os"
 )
 
 var err error
@@ -11,6 +12,8 @@ func main() {
 
 	dbArg := flag.String("dbpath", "testdb", "Absolute Path to the database")
 	flag.Parse()
+
+	os.RemoveAll("testdb/")
 
 	openDB(*dbArg)
 	defer closeDB()

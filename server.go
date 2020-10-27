@@ -29,9 +29,6 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	keyType := params["keyType"][0]
 	valueType := params["valueType"][0]
 
-	fmt.Println(startPoint, keyType)
-	fmt.Println(GetByteArray(startPoint, keyType))
-
 	//log the incoming request
 	log.Println("New Request with folowing Params :", "limit =", limit, "| startPoint =", startPoint, "| direction =", directon, "| keyType =", keyType, "| valueType =", valueType)
 

@@ -42,6 +42,11 @@ func GetByteArray(any interface{}, keyType string) []byte {
 		}
 		fmt.Println("bytes", b)
 		return b
+	} else if keyType == "integer" {
+		s0 := any.(string)
+		s1, _ := strconv.Atoi(s0)
+		s := intToByteArray(s1)
+		return s
 	}
 
 	return []byte(fmt.Sprintf("%v", any.(interface{})))
@@ -57,7 +62,7 @@ func byteArrayToType(b []byte, bType string) interface{} {
 	if bType == "string" {
 		r = string(b)
 	} else if bType == "integer" {
-		r = binary.BigEndian.Uint32(b)
+		r = binary.BigEndian.Uint64(b)
 	} else if bType == "hexadecimal" {
 		r = hexutils.BytesToHex(b)
 	} else if bType == "boolean" {
