@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"os"
@@ -32,7 +33,17 @@ func createLogFile() {
 }
 
 //GetByteArray converts variable of any type into byte array
-func GetByteArray(any interface{}) []byte {
+func GetByteArray(any interface{}, keyType string) []byte {
+
+	if keyType == "hexadecimal" {
+		b, e := hex.DecodeString(any.(string))
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println("bytes", b)
+		return b
+	}
+
 	return []byte(fmt.Sprintf("%v", any.(interface{})))
 }
 
@@ -48,7 +59,7 @@ func byteArrayToType(b []byte, bType string) interface{} {
 	} else if bType == "integer" {
 		r = binary.BigEndian.Uint32(b)
 	} else if bType == "hexadecimal" {
-		r = "0x" + hexutils.BytesToHex(b)
+		r = hexutils.BytesToHex(b)
 	} else if bType == "boolean" {
 		r, _ = strconv.ParseBool(string(b))
 	} else if bType == "bytearray" {
@@ -58,4 +69,10 @@ func byteArrayToType(b []byte, bType string) interface{} {
 		return rb
 	}
 	return r
+}
+
+func intToByteArray(num int) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, uint64(num))
+	return b
 }
