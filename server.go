@@ -18,6 +18,9 @@ func serve() {
 	http.ListenAndServe(":8080", nil)
 }
 
+var firstElement []byte
+var lastElement []byte
+
 func handleReq(res http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	//fmt.Println(req.PostForm)
@@ -43,6 +46,14 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 			if i >= limit {
 				break
 			}
+			if i == 0 {
+				firstElement = copyByteArray(iter.Key())
+			}
+
+			if i == limit-1 {
+				lastElement = copyByteArray(iter.Key())
+			}
+
 			appendKeyValueToResp(&k, &val, iter, keyType, valueType)
 			i++
 		}
@@ -51,7 +62,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 		if directon == "previous" {
 
 			iter := db.NewIterator(nil, nil)
-			for ok := iter.Seek(GetByteArray(startPoint, keyType)); ok; ok = iter.Prev() {
+			for ok := iter.Seek(firstElement); ok; ok = iter.Prev() {
 				// Use key/value.
 				if i == 0 {
 					i++
@@ -61,6 +72,13 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 
 				if i > limit {
 					break
+				}
+				if i == limit {
+					firstElement = copyByteArray(iter.Key())
+				}
+
+				if i == 1 {
+					lastElement = copyByteArray(iter.Key())
 				}
 
 				appendKeyValueToResp(&k, &val, iter, keyType, valueType)
@@ -75,7 +93,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 
 		} else {
 			iter := db.NewIterator(nil, nil)
-			for ok := iter.Seek(GetByteArray(startPoint, keyType)); ok; ok = iter.Next() {
+			for ok := iter.Seek(lastElement); ok; ok = iter.Next() {
 				// Use key/value.
 				if i == 0 {
 					i++
@@ -86,6 +104,15 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 				if i > limit {
 					break
 				}
+
+				if i == 1 {
+					firstElement = copyByteArray(iter.Key())
+				}
+
+				if i == limit {
+					lastElement = copyByteArray(iter.Key())
+				}
+
 				appendKeyValueToResp(&k, &val, iter, keyType, valueType)
 				i++
 

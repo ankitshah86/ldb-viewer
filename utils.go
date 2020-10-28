@@ -81,3 +81,9 @@ func intToByteArray(num int) []byte {
 	binary.BigEndian.PutUint64(b, uint64(num))
 	return b
 }
+
+func copyByteArray(b []byte) []byte {
+	r := make([]byte, len(b))
+	copy(r, b)
+	return r
+}
