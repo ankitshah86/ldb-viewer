@@ -22,9 +22,7 @@ For linux
 
 ## TODO
 - [ ] Add Tests
-- [ ] Add support for integers
 - [ ] Check database validity
-- [ ] Add Caching
 - [ ] Add support for csv export
 - [ ] Add support for lookup by key
 - [ ] Write a ddos detector
