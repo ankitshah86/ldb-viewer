@@ -57,22 +57,56 @@ func byteArrayToInt(b []byte) int {
 	return r
 }
 
-func byteArrayToType(b []byte, bType string) interface{} {
+func byteArrayToType(b []byte, bType DataType) interface{} {
 	var r interface{}
-	if bType == "string" {
+
+	switch bType {
+	case stringT:
 		r = string(b)
-	} else if bType == "integer" {
-		r = binary.BigEndian.Uint64(b)
-	} else if bType == "hexadecimal" {
+	case hexT:
 		r = hexutils.BytesToHex(b)
-	} else if bType == "boolean" {
+	case booleanT:
 		r, _ = strconv.ParseBool(string(b))
-	} else if bType == "bytearray" {
+	case byteArrayT:
 		rb := make([]byte, len(b))
-		//This needs to be done to ensure that actual values are appended as opposed to pointers
 		copy(rb, b)
 		return rb
+	case integerT:
+		r = binary.BigEndian.Uint64(b)
+	case int32BigEndian:
+		r = int32(binary.BigEndian.Uint32(b))
+	case int32LittleEndian:
+		r = int32(binary.LittleEndian.Uint32(b))
+	case uint32BigEndian:
+		r = binary.BigEndian.Uint32(b)
+	case uint32LittleEndian:
+		r = binary.LittleEndian.Uint32(b)
+	case int64BigEndian:
+		r = int64(binary.BigEndian.Uint64(b))
+	case int64LittleEndian:
+		r = int64(binary.LittleEndian.Uint64(b))
+	case uint64BigEndian:
+		r = binary.BigEndian.Uint64(b)
+	case uint64LittleEndian:
+		r = binary.LittleEndian.Uint64(b)
 	}
+
+	/*
+		if bType == stringT {
+			r = string(b)
+		} else if bType == "integer" {
+			r = binary.BigEndian.Uint64(b)
+		} else if bType == hexT {
+			r = hexutils.BytesToHex(b)
+		} else if bType == booleanT {
+			r, _ = strconv.ParseBool(string(b))
+		} else if bType == byteArrayT {
+			rb := make([]byte, len(b))
+			//This needs to be done to ensure that actual values are appended as opposed to pointers
+			copy(rb, b)
+			return rb
+		}
+	*/
 	return r
 }
 

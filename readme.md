@@ -25,4 +25,5 @@ For linux
 - [ ] Check database validity
 - [ ] Add support for csv export
 - [ ] Add support for lookup by key
-- [ ] Add support for floats, different integer types(with endianness)
+- [ ] Add support for floats
+- [ ] Add better style for the front end

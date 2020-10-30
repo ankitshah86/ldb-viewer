@@ -25,6 +25,9 @@ var valsCache [][]byte
 //Direction can be used for pagination or lack thereof
 type Direction string
 
+//DataType can be used to parse the datatype required by the frontend
+type DataType string
+
 type response struct {
 	Keys   []interface{} `json:"keys"`
 	Values []interface{} `json:"values"`
@@ -34,6 +37,23 @@ const (
 	previous Direction = "previous"
 	next     Direction = "next"
 	none     Direction = "none"
+)
+
+const (
+	integerT           DataType = "integer"
+	int32LittleEndian  DataType = "int32LE"
+	int32BigEndian     DataType = "int32BE"
+	uint32LittleEndian DataType = "uint32LE"
+	uint32BigEndian    DataType = "uint32BE"
+	int64LittleEndian  DataType = "int64LE"
+	int64BigEndian     DataType = "int64BE"
+	uint64LittleEndian DataType = "uint64LE"
+	uint64BigEndian    DataType = "uint64BE"
+
+	hexT       DataType = "hexadecimal"
+	stringT    DataType = "string"
+	byteArrayT DataType = "bytearray"
+	booleanT   DataType = "boolean"
 )
 
 /*
@@ -49,8 +69,8 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	params := req.PostForm
 	limit, _ := strconv.Atoi(params["limit"][0])
 	direction := Direction(params["direction"][0])
-	keyType := params["keyType"][0]
-	valueType := params["valueType"][0]
+	keyType := DataType(params["keyType"][0])
+	valueType := DataType(params["valueType"][0])
 
 	//log the incoming request
 	log.Println("New Request with folowing Params :", "limit =", limit, "| direction =", direction, "| keyType =", keyType, "| valueType =", valueType)
@@ -64,7 +84,7 @@ func handleReq(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(res, string(s1))
 }
 
-func getKVSlice(limit int, direction Direction, keyType string, valueType string) ([]interface{}, []interface{}) {
+func getKVSlice(limit int, direction Direction, keyType DataType, valueType DataType) ([]interface{}, []interface{}) {
 	var keys []interface{}
 	var values []interface{}
 
