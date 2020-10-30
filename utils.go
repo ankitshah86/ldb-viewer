@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -89,6 +90,15 @@ func byteArrayToType(b []byte, bType DataType) interface{} {
 		r = binary.BigEndian.Uint64(b)
 	case uint64LittleEndian:
 		r = binary.LittleEndian.Uint64(b)
+	case float32BigEndian:
+		r = math.Float32frombits(binary.BigEndian.Uint32(b))
+	case float32LittleEndian:
+		r = math.Float32frombits(binary.LittleEndian.Uint32(b))
+	case float64BigEndian:
+		r = math.Float64frombits(binary.BigEndian.Uint64(b))
+	case float64LittleEndian:
+		r = math.Float64frombits(binary.LittleEndian.Uint64(b))
+
 	}
 
 	/*

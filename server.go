@@ -50,6 +50,11 @@ const (
 	uint64LittleEndian DataType = "uint64LE"
 	uint64BigEndian    DataType = "uint64BE"
 
+	float32BigEndian    DataType = "float32BE"
+	float32LittleEndian DataType = "float32LE"
+	float64LittleEndian DataType = "float64LE"
+	float64BigEndian    DataType = "float64BE"
+
 	hexT       DataType = "hexadecimal"
 	stringT    DataType = "string"
 	byteArrayT DataType = "bytearray"
