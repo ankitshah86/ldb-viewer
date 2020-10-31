@@ -1,4 +1,4 @@
-var res
+var res = []
 var limit
 var direction = "none"
 var keyType = "integer"
@@ -35,6 +35,22 @@ function getData(limit = 10, direction = "none") {
 
 }
 
+function exportCSV() {
+    var csv = ""
+    for (let i= 0; i < res.keys.length ; i++) {
+        csv = csv + ("\""+res.keys[i]+"\",\""+res.values[i]+"\"\n")
+    }
+    console.log(csv)
+    var filename = "test.csv"
+    var link = document.createElement('a');
+    link.style.display = 'none';
+    link.setAttribute('target', '_blank');
+    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 function limitReset() {
     var s = document.getElementById("limit")

@@ -23,7 +23,5 @@ For linux
 ## TODO
 - [ ] Add Tests
 - [ ] Check database validity
-- [ ] Add support for csv export
 - [ ] Add support for lookup by key
-- [ ] Add support for floats
 - [ ] Add better style for the front end
