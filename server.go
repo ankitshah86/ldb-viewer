@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/syndtr/goleveldb/leveldb/iterator"
 )
 
 func serve() {
@@ -133,8 +135,7 @@ func rebuildCache(limit int, direction Direction) {
 				break
 			}
 
-			keysCache[i] = copyByteArray(iter.Key())
-			valsCache[i] = copyByteArray(iter.Value())
+			readKVfromIter(iter, i)
 			i++
 		}
 	} else {
@@ -143,18 +144,27 @@ func rebuildCache(limit int, direction Direction) {
 			if i >= limit {
 				break
 			}
-			keysCache[i] = copyByteArray(iter.Key())
-			valsCache[i] = copyByteArray(iter.Value())
+			readKVfromIter(iter, i)
 			i++
 		}
 
 		//the array needs to be fliped
-		for i, j := 0, len(keysCache)-1; i < j; i, j = i+1, j-1 {
-			keysCache[i], keysCache[j] = keysCache[j], keysCache[i]
-			valsCache[i], valsCache[j] = valsCache[j], valsCache[i]
-		}
+		flipSlice(&keysCache)
+		flipSlice(&valsCache)
 	}
 
 	firstElement = keysCache[0]
 	lastElement = keysCache[limit-1]
+}
+
+func flipSlice(inSlice *[][]byte) {
+	for i, j := 0, len(*inSlice)-1; i < j; i, j = i+1, j-1 {
+		(*inSlice)[i], (*inSlice)[j] = (*inSlice)[j], (*inSlice)[i]
+	}
+}
+
+func readKVfromIter(iter iterator.Iterator, i int) {
+
+	keysCache[i] = copyByteArray(iter.Key())
+	valsCache[i] = copyByteArray(iter.Value())
 }
