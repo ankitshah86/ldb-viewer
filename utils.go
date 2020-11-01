@@ -53,11 +53,6 @@ func GetByteArray(any interface{}, keyType string) []byte {
 	return []byte(fmt.Sprintf("%v", any.(interface{})))
 }
 
-func byteArrayToInt(b []byte) int {
-	r, _ := strconv.Atoi(string(b))
-	return r
-}
-
 func byteArrayToType(b []byte, bType DataType) interface{} {
 	var r interface{}
 
@@ -101,22 +96,6 @@ func byteArrayToType(b []byte, bType DataType) interface{} {
 
 	}
 
-	/*
-		if bType == stringT {
-			r = string(b)
-		} else if bType == "integer" {
-			r = binary.BigEndian.Uint64(b)
-		} else if bType == hexT {
-			r = hexutils.BytesToHex(b)
-		} else if bType == booleanT {
-			r, _ = strconv.ParseBool(string(b))
-		} else if bType == byteArrayT {
-			rb := make([]byte, len(b))
-			//This needs to be done to ensure that actual values are appended as opposed to pointers
-			copy(rb, b)
-			return rb
-		}
-	*/
 	return r
 }
 
