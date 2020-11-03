@@ -3,14 +3,29 @@ h1 {
     color: green;
 }
 
+.center {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.left {
+    float: left;
+    margin-left: 5%;
+}
+
+.right {
+    float: right;
+    margin-right: 5%;
+}
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    margin: 5%;
+    width: 90%;
 }
 
-td,
-th {
+td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
@@ -18,4 +33,21 @@ th {
 
 tr:nth-child(even) {
     background-color: #99ff99;
+}
+
+button {
+    padding: 5px 5px;
+    margin: 5px 5px;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgb(240, 255, 240);
+    border-width: 2 2;
+}
+
+button:hover {
+    text-align: center;
+    border-radius: 10px;
+    border-width: 3 3;
+    background-color: lightgreen;
 }

@@ -1,13 +1,21 @@
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <script src="index.js">
-    </script>    
+  <link rel="stylesheet" href="styles.css">
+  <script src="index.js">
+  </script>
 </head>
-<h1>Hello World</h1>
+<h1>LevedDB Viewer</h1>
 
 
 
 <body onload="getData()">
+
+  <p>
+    LevelDB stores data as Key-Value pairs. The Key and Value themselves are stored as an array of bytes. This array of
+    bytes could be of any type.
+    To ensure that data can be visualized in its correct format, you may choose the types of Key and Value. The defaule
+    values are string for both.
+  </p>
+  <div class="center">
     <label>Entries per page:</label>
     <select id="limit" onchange="limitReset()">
       <option value="10">10</option>
@@ -16,13 +24,9 @@
       <option value="100">100</option>
     </select>
     <p>
-      LevelDB stores data as Key-Value pairs. The Key and Value themselves are stored as an array of bytes. This array of bytes could be of any type. 
-      To ensure that data can be visualized in its correct format, you may choose the types of Key and Value. The defaule values are string for both.
-    </p>
-      <p>
       <label>Key Type:</label>
-      <select id="keytype" onchange="keyTypeChanged()">
-        <option value="integer">Integer</option> 
+      <select class="dropdown-content" id="keytype" onchange="keyTypeChanged()">
+        <option value="integer">Integer</option>
         <option value="string">String</option>
         <option value="hexadecimal">Hexadecimal</option>
         <option value="boolean">Boolean</option>
@@ -45,10 +49,10 @@
       </select>
     </p>
     <p>
-      <label>kalue Type:</label>
+      <label>value Type:</label>
       <select id="valuetype" onchange="valueTypeChanged()">
         <option value="string">String</option>
-        <option value="integer">Integer</option> 
+        <option value="integer">Integer</option>
         <option value="hexadecimal">Hexadecimal</option>
         <option value="boolean">Boolean</option>
         <option value="bytearray">ByteArray</option>
@@ -66,15 +70,24 @@
         <option value="float32BE">float32_BigEndian</option>
         <option value="float64LE">float64_LittleEndian</option>
         <option value="float64BE">float64_BigEndian</option>
-        
+
       </select>
     </p>
-    <p>
-      <button onclick="exportCSV()">Export Page as CSV</button>
-    </p>
-    <div id="table">
-    </div>
+  </div>
+
+
+  <span class="left">
+    <button onclick="exportCSV()">Export Page as CSV</button>
+  </span>
+
+  <span class="right">
     <button onclick="previousClicked()">Previous</button><button onclick="nextClicked()">Next</button>
-    
+  </span>
+
+
+  <div id="table">
+  </div>
+
+
 
 </body>
