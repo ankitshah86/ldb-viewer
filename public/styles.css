@@ -51,3 +51,22 @@ button:hover {
     border-width: 3 3;
     background-color: lightgreen;
 }
+
+.dropdown-content {
+    height: 2em;
+    font-size: 1em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.dropdown-label {
+    margin-left: 5em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    font-size: 1.2em;
+
+}
+
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding:20px;
+}

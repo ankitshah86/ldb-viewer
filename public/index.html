@@ -16,15 +16,15 @@
     values are string for both.
   </p>
   <div class="center">
-    <label>Entries per page:</label>
-    <select id="limit" onchange="limitReset()">
+    <label class="dropdown-label" style="margin-left: -5em;">Entries per page:</label>
+    <select class="dropdown-content" id="limit" onchange="limitReset()">
       <option value="10">10</option>
       <option value="25">25</option>
       <option value="50">50</option>
       <option value="100">100</option>
     </select>
-    <p>
-      <label>Key Type:</label>
+    
+      <label class="dropdown-label">Key Type:</label>
       <select class="dropdown-content" id="keytype" onchange="keyTypeChanged()">
         <option value="integer">Integer</option>
         <option value="string">String</option>
@@ -47,10 +47,10 @@
         <option value="float64BE">float64_BigEndian</option>
 
       </select>
-    </p>
-    <p>
-      <label>value Type:</label>
-      <select id="valuetype" onchange="valueTypeChanged()">
+    
+    
+      <label class="dropdown-label">value Type:</label>
+      <select class="dropdown-content" id="valuetype" onchange="valueTypeChanged()">
         <option value="string">String</option>
         <option value="integer">Integer</option>
         <option value="hexadecimal">Hexadecimal</option>
@@ -72,7 +72,7 @@
         <option value="float64BE">float64_BigEndian</option>
 
       </select>
-    </p>
+    
   </div>
 
 
