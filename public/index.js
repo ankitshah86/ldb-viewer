@@ -15,7 +15,7 @@ function getData(limit = 10, direction = "none") {
         res = JSON.parse(xhr.response)
         console.log(res)
         var t = document.getElementById("table")
-        var txt = "<table><tr><th>Key</th><th>Value</th></tr>"
+        var txt = "<table style=\"table-layout: fixed; width: 90%\" ><tr><th>Key</th><th>Value</th></tr>"
         var length = res.keys.length
 
         for (let i = 0; i < length; i++) {

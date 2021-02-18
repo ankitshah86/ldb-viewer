@@ -23,16 +23,22 @@ table {
     border-collapse: collapse;
     margin: 5%;
     width: 90%;
+    table-layout: auto ;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+    word-wrap: break-word;
 }
 
 tr:nth-child(even) {
     background-color: #99ff99;
+}
+
+tr:last-child {
+    width: max-content;
 }
 
 button {
