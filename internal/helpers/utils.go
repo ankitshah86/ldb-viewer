@@ -14,23 +14,21 @@ import (
 )
 
 func createLogFile() {
-
-	if _, er := os.Stat("Request_logs"); os.IsNotExist(er) {
-		os.Mkdir("Request_logs", 0777)
+	logDir := "Request_logs"
+	if _, err := os.Stat(logDir); os.IsNotExist(err) {
+		if err := os.Mkdir(logDir, 0755); err != nil {
+			log.Fatalf("Error creating '%s' directory: %v", logDir, err)
+		}
 	}
 
-	f, err := os.Create("Request_logs/" + strconv.FormatInt(time.Now().Unix(), 10) + ".log")
-
+	logFileName := logDir + "/" + strconv.FormatInt(time.Now().Unix(), 10) + ".log"
+	logFile, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("Error in creating log file %s\n", err)
+		log.Fatalf("Error creating log file '%s': %v", logFileName, err)
 	}
 
-	logfile, err := os.OpenFile(f.Name(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	log.SetOutput(logfile)
+	log.SetOutput(logFile)
 	log.Println("LDB-Viewer server started")
-	if err != nil {
-		log.Fatalf("Error in opening Log File %s\n", err)
-	}
 }
 
 // GetByteArray converts variable of any type into byte array
