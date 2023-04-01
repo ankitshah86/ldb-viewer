@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"encoding/binary"
@@ -33,7 +33,7 @@ func createLogFile() {
 	}
 }
 
-//GetByteArray converts variable of any type into byte array
+// GetByteArray converts variable of any type into byte array
 func GetByteArray(any interface{}, keyType string) []byte {
 
 	if keyType == "hexadecimal" {
@@ -50,9 +50,10 @@ func GetByteArray(any interface{}, keyType string) []byte {
 		return s
 	}
 
-	return []byte(fmt.Sprintf("%v", any.(interface{})))
+	return []byte(fmt.Sprintf("%v", any))
 }
 
+// byteArrayToType converts byte array to the required type
 func byteArrayToType(b []byte, bType DataType) interface{} {
 	var r interface{}
 
@@ -99,12 +100,14 @@ func byteArrayToType(b []byte, bType DataType) interface{} {
 	return r
 }
 
+// intToByteArray converts integer to byte array
 func intToByteArray(num int) []byte {
 	b := make([]byte, 8)
 	binary.BigEndian.PutUint64(b, uint64(num))
 	return b
 }
 
+// copyByteArray copies byte array
 func copyByteArray(b []byte) []byte {
 	r := make([]byte, len(b))
 	copy(r, b)

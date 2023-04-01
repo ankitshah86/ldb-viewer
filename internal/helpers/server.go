@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 )
 
-func serve() {
+func Serve() {
 	http.Handle("/", http.FileServer(http.Dir("./public")))
 	http.HandleFunc("/data", handleReq)
 	fmt.Println("Serving on port 8080, To see the database, kindly go to http://localhost:8080 on the browser of your choice.")
@@ -24,10 +24,10 @@ var lastElement []byte
 var keysCache [][]byte
 var valsCache [][]byte
 
-//Direction can be used for pagination or lack thereof
+// Direction can be used for pagination or lack thereof
 type Direction string
 
-//DataType can be used to parse the datatype required by the frontend
+// DataType can be used to parse the datatype required by the frontend
 type DataType string
 
 type response struct {
